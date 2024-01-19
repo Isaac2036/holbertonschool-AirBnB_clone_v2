@@ -24,14 +24,7 @@ def c_is_fun(text):
     cleaned_text = text.replace('_', ' ')
     return f"C {cleaned_text}"
 
-
 @app.route("/python", strict_slashes=False)
-def Python_is(text='is cool'):
-    """Python si es genial!!!"""
-    cleaned_text = text.replace('_', ' ')
-    return f"Python {cleaned_text}"
-
-
 @app.route("/python/<text>", strict_slashes=False)
 def Python_is_cool(text='is cool'):
     """Python si es genial!!!"""
