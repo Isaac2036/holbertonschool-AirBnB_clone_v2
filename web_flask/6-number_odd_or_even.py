@@ -51,9 +51,9 @@ def number_template(n):
 def odd_or_even(n):
     """odd or even"""
     if isinstance(n, int):
-        text='is odd'
-        if n%2==0:
-            text='is even'
+        text = 'is odd'
+        if n % 2 == 0:
+            text = 'is even'
         return render_template('6-number_odd_or_even.html', number=n, t=text)
 
 
