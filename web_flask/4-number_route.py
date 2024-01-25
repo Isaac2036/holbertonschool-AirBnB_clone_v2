@@ -37,7 +37,7 @@ def Python_is_cool(text='is cool'):
 def is_it_a_number(n):
     """Python si es genial!!!"""
     if isinstance(n, int):
-        return f"{n} is number"
+        return f"{n} a is number"
 
 
 if __name__ == '__main__':
