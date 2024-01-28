@@ -9,12 +9,13 @@ class FileStorage:
     __objects = {}
 
     def all(self, cls=None):
-        """Returns a dictionary of models currently in storage"""
-        if bool(cls):
-            temp_dict = FileStorage.__objects
-            filter_object = {
-                k: v for k, v in temp_dict.items() if v.__class__ == cls}
-            return filter_object
+        """Returns a dictionary of objects, optionally filtered by class"""
+        if cls is not None:
+            dic_class = {}
+            for key, value in FileStorage.__objects.items():
+                if value.__class__ == cls:
+                    dic_class[key] = value
+            return dic_class
         return FileStorage.__objects
 
     def new(self, obj):
@@ -28,7 +29,7 @@ class FileStorage:
             temp.update(FileStorage.__objects)
             for key, val in temp.items():
                 temp[key] = val.to_dict()
-            json.dump(temp, f, indent=4)
+            json.dump(temp, f)
 
     def reload(self):
         """Loads storage dictionary from file"""
@@ -41,10 +42,10 @@ class FileStorage:
         from models.review import Review
 
         classes = {
-            'BaseModel': BaseModel, 'User': User, 'Place': Place,
-            'State': State, 'City': City, 'Amenity': Amenity,
-            'Review': Review
-        }
+                    'BaseModel': BaseModel, 'User': User, 'Place': Place,
+                    'State': State, 'City': City, 'Amenity': Amenity,
+                    'Review': Review
+                  }
         try:
             temp = {}
             with open(FileStorage.__file_path, 'r') as f:
@@ -55,10 +56,13 @@ class FileStorage:
             pass
 
     def delete(self, obj=None):
-        """Delete a instance"""
-        if bool(obj):
-            key = f'{obj.__class__.__name__}.{obj.id}'
-            FileStorage.__objects.pop(key, None)
+        """Deletes obj from __objects if it exists"""
+        if obj is not None:
+            for key, value in FileStorage.__objects.items():
+                if obj is value:
+                    del FileStorage.__objects[key]
+                    self.save()
+                    break
 
     def close(self):
         self.reload()
