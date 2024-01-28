@@ -31,9 +31,7 @@ class DBStorage:
 
         # Configure the engine with environment variable values
         self.__engine = create_engine(
-            f"mysql+mysqldb://{hbnb_user}:{hbnb_pass}@{hbnb_host}:\
-                    3306/{hbnb_db}",
-            pool_pre_ping=True
+            f"mysql+mysqldb://{hbnb_user}:{hbnb_pass}@{hbnb_host}:/{hbnb_db}", pool_pre_ping=True
         )
 
         # Drop all tables if environment variable HBNB_ENV equals test
