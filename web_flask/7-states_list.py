@@ -20,7 +20,7 @@ def state_list():
     """
         method to render states
     """
-    states = storage.all('State').values()
+    states = sorted(storage.all(State).values(), key=lambda s: s.name)
     return render_template("7-states_list.html", states=states)
 
 if __name__ == '__main__':
