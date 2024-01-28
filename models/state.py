@@ -1,31 +1,25 @@
 #!/usr/bin/python3
-""" State Module for HBNB project """
+"""This module defines a class User"""
 from models.base_model import BaseModel, Base
 from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
 from os import getenv
-from models.city import City
 
 
-if getenv('HBNB_TYPE_STORAGE') == 'db':
-    class State(BaseModel, Base):
-        """ State class for ORM"""
-        __tablename__ = 'states'
-        name = Column(String(128), nullable=False)
-        cities = relationship('City', backref='state',
-                              cascade='all, delete-orphan')
-else:
-    class State(BaseModel):
-        """ State class """
-        name = ''
-
-        @property
-        def cities(self):
-            from models import storage
-            list_cities = []
-
-            for city in storage.all(City).values():
-                if city.state_id == self.id:
-                    list_cities.append(city)
-
-            return list_cities
+class User(BaseModel, Base):
+    """This class defines a user by various attributes"""
+    if getenv('HBNB_TYPE_STORAGE') == 'db':
+        __tablename__ = 'users'
+        email = Column(String(128), nullable=False)
+        password = Column(String(128), nullable=False)
+        first_name = Column(String(128), nullable=True, default="NULL")
+        last_name = Column(String(128), nullable=True, default="NULL")
+        places = relationship("Place", backref="user",
+                              cascade="all, delete-orphan")
+        # reviews = relationship("Review", backref="user",
+        #                        cascade="all, delete-orphan")
+    else:
+        email = ''
+        password = ''
+        first_name = ''
+        last_name = ''
