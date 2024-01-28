@@ -83,4 +83,5 @@ class FileStorage:
 
     def close(self):
         """ calls reload() for deserializing the JSON file to objects."""
-        self.reload()
+         if self.__session:
+            self.__session.remove()
