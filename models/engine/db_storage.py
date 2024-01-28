@@ -22,21 +22,20 @@ class DBStorage():
         db = getenv('HBNB_MYSQL_DB')
 
         self.__engine = create_engine(
-            f'mysql+mysqldb://{user}:{pwd}@{host}:3306/{db}', pool_pre_ping=True)
+            f'mysql+mysqldb://{user}:{pwd}@{host}/{db}', pool_pre_ping=True)
 
         if getenv('HBNB_ENV') == 'test':
             Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
         list_classes = [User, State, City, Place, Amenity, Review]
-
-        classes = cls if cls else list_classes
+        classes = [cls] if cls else list_classes
 
         result = {}
 
         for c in classes:
-            obj = self.__session.query(c).all()
-            if obj:
+            objs = self.__session.query(c).all()
+            for obj in objs:
                 key = f'{obj.__class__.__name__}.{obj.id}'
                 result[key] = obj
 
@@ -65,4 +64,3 @@ class DBStorage():
     def close(self):
         """Remove all session"""
         self.__session.remove()
-        self.reload()
