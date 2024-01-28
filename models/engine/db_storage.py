@@ -22,20 +22,16 @@ class DBStorage:
     __engine = None
     __session = None
 
-    def __init__(self):
-        hbnb_user = getenv("HBNB_MYSQL_USER")
-        hbnb_pass = getenv("HBNB_MYSQL_PWD")
-        hbnb_host = getenv("HBNB_MYSQL_HOST")
-        hbnb_db = getenv("HBNB_MYSQL_DB")
-        hbnb_env = getenv("HBNB_ENV")
+        def __init__(self):
+        user = getenv('HBNB_MYSQL_USER')
+        pwd = getenv('HBNB_MYSQL_PWD')
+        host = getenv('HBNB_MYSQL_HOST')
+        db = getenv('HBNB_MYSQL_DB')
 
-        # Configure the engine with environment variable values
         self.__engine = create_engine(
-            f"mysql+mysqldb://{hbnb_user}:{hbnb_pass}@{hbnb_host}:/{hbnb_db}", pool_pre_ping=True
-        )
+            f'mysql+mysqldb://{user}:{pwd}@{host}/{db}', pool_pre_ping=True)
 
-        # Drop all tables if environment variable HBNB_ENV equals test
-        if hbnb_env == "test":
+        if getenv('HBNB_ENV') == 'test':
             Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
