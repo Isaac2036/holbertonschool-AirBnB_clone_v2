@@ -25,13 +25,21 @@ class DBStorage:
     __session = None
 
     def __init__(self):
-        """Instatiate the engine and drop if test database"""
-        self.__engine = create_engine("mysql+mysqldb://{}:{}@{}/{}".format(
-            os.environ['HBNB_MYSQL_USER'],
-            os.environ['HBNB_MYSQL_PWD'],
-            os.environ['HBNB_MYSQL_HOST'],
-            os.environ['HBNB_MYSQL_DB']), pool_pre_ping=True)
-        if os.getenv('HBNB_ENV') == 'test':
+        hbnb_user = getenv("HBNB_MYSQL_USER")
+        hbnb_pass = getenv("HBNB_MYSQL_PWD")
+        hbnb_host = getenv("HBNB_MYSQL_HOST")
+        hbnb_db = getenv("HBNB_MYSQL_DB")
+        hbnb_env = getenv("HBNB_ENV")
+
+        # Configure the engine with environment variable values
+        self.__engine = create_engine(
+            f"mysql+mysqldb://{hbnb_user}:{hbnb_pass}@{hbnb_host}:\
+                    3306/{hbnb_db}",
+            pool_pre_ping=True
+        )
+
+        # Drop all tables if environment variable HBNB_ENV equals test
+        if hbnb_env == "test":
             Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
@@ -64,14 +72,11 @@ class DBStorage:
             self.__session.delete(obj)
 
     def reload(self):
-        """Create tables and current database session"""
+        """Create all tables in the database and initialize a session."""
         Base.metadata.create_all(self.__engine)
-
-        session_factory = sessionmaker(bind=self.__engine,
-                                       expire_on_commit=False)
-        Session = scoped_session(session_factory)
-        self.__session = Session()
-
+        Session = sessionmaker(bind=self.__engine, expire_on_commit=False)
+        self.__session = scoped_session(Session)
+        
     def close(self):
         """ call close on private session. """
         self.__Session.close()
