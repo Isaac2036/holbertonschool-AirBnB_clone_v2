@@ -9,7 +9,7 @@ app = Flask(__name__)
 
 
 @app.teardown_appcontext
-def teardown(exception):
+def teardown(sefl):
     """
         method to handle teardown
     """
@@ -21,8 +21,8 @@ def state_list():
     """
         method to render states
     """
-    states = sorted(storage.all(State).values(), key=lambda s: s.name)
-    return render_template("7-states_list.html", states=states)
+    all_states = storage.all(State)
+    return render_template('7-states_list.html', states=states)
 
 if __name__ == '__main__':
         app.run(host='0.0.0.0', port=5000)
