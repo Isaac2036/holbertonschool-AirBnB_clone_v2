@@ -4,7 +4,7 @@
 """
 from flask import Flask, render_template
 from models import storage
-from lxml import etree
+
 app = Flask(__name__)
 
 
