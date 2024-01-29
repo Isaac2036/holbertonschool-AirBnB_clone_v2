@@ -1,0 +1,1 @@
+This is the dir of web static
